@@ -69,9 +69,6 @@ gem 'resque', :require => "resque/server"
 #For debugging
 gem 'pry'
 
-#Function to search results
-gem 'searchkick'
-
 #Proxy for HTTP
 gem 'socksify'
 

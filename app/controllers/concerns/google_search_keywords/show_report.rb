@@ -18,7 +18,7 @@ module ShowReport
 
   #Function to load report
   def load_report
-  	@report = GoogleKeyword.all_data
+  	@report = GoogleKeyword.all_data(params[:page] || 1)
   end
 
 end

@@ -27,7 +27,8 @@
                       = render "adwords"
                     td
                       = render "non_adwords"
-        /! /.table-responsive
-      /! /.panel-body
-    /! /.panel
-  /! /.col-lg-12
+
+          .row
+            = paginate @report 
+
+ 
