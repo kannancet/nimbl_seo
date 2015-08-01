@@ -13,86 +13,71 @@
 
 ActiveRecord::Schema.define(version: 20150731095730) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "adword_urls", force: :cascade do |t|
-    t.string   "url"
-    t.string   "position"
-    t.integer  "google_search_page_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
-  end
-
-  create_table "categories", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "url",                   limit: 255
+    t.string   "position",              limit: 255
+    t.integer  "google_search_page_id", limit: 4
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "categories_operations", id: false, force: :cascade do |t|
-    t.integer "category_id"
-    t.integer "operation_id"
+    t.integer "category_id",  limit: 4
+    t.integer "operation_id", limit: 4
   end
 
   add_index "categories_operations", ["category_id"], name: "index_categories_operations_on_category_id", using: :btree
   add_index "categories_operations", ["operation_id"], name: "index_categories_operations_on_operation_id", using: :btree
 
-  create_table "companies", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "google_keywords", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",       limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
   create_table "google_search_pages", force: :cascade do |t|
-    t.integer  "google_keyword_id"
-    t.integer  "adword_count_top"
-    t.integer  "adword_count_right"
-    t.integer  "adword_count_total"
-    t.integer  "nonadword_count_total"
-    t.integer  "links_total"
-    t.text     "search_results_total"
-    t.text     "html_code"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.integer  "google_keyword_id",     limit: 4
+    t.integer  "adword_count_top",      limit: 4
+    t.integer  "adword_count_right",    limit: 4
+    t.integer  "adword_count_total",    limit: 4
+    t.integer  "nonadword_count_total", limit: 4
+    t.integer  "links_total",           limit: 4
+    t.text     "search_results_total",  limit: 65535
+    t.text     "html_code",             limit: 65535
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
   end
 
   create_table "non_adword_urls", force: :cascade do |t|
-    t.string   "url"
-    t.string   "position"
-    t.integer  "google_search_page_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.string   "url",                   limit: 255
+    t.string   "position",              limit: 255
+    t.integer  "google_search_page_id", limit: 4
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
-    t.integer  "resource_owner_id", null: false
-    t.integer  "application_id",    null: false
-    t.string   "token",             null: false
-    t.integer  "expires_in",        null: false
-    t.text     "redirect_uri",      null: false
-    t.datetime "created_at",        null: false
+    t.integer  "resource_owner_id", limit: 4,     null: false
+    t.integer  "application_id",    limit: 4,     null: false
+    t.string   "token",             limit: 255,   null: false
+    t.integer  "expires_in",        limit: 4,     null: false
+    t.text     "redirect_uri",      limit: 65535, null: false
+    t.datetime "created_at",                      null: false
     t.datetime "revoked_at"
-    t.string   "scopes"
+    t.string   "scopes",            limit: 255
   end
 
   add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.integer  "resource_owner_id"
-    t.integer  "application_id"
-    t.string   "token",             null: false
-    t.string   "refresh_token"
-    t.integer  "expires_in"
+    t.integer  "resource_owner_id", limit: 4
+    t.integer  "application_id",    limit: 4
+    t.string   "token",             limit: 255, null: false
+    t.string   "refresh_token",     limit: 255
+    t.integer  "expires_in",        limit: 4
     t.datetime "revoked_at"
-    t.datetime "created_at",        null: false
-    t.string   "scopes"
+    t.datetime "created_at",                    null: false
+    t.string   "scopes",            limit: 255
   end
 
   add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
@@ -100,60 +85,42 @@ ActiveRecord::Schema.define(version: 20150731095730) do
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
   create_table "oauth_applications", force: :cascade do |t|
-    t.string   "name",                      null: false
-    t.string   "uid",                       null: false
-    t.string   "secret",                    null: false
-    t.text     "redirect_uri",              null: false
-    t.string   "scopes",       default: "", null: false
+    t.string   "name",         limit: 255,                null: false
+    t.string   "uid",          limit: 255,                null: false
+    t.string   "secret",       limit: 255,                null: false
+    t.text     "redirect_uri", limit: 65535,              null: false
+    t.string   "scopes",       limit: 255,   default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "operations", force: :cascade do |t|
-    t.string   "invoice_num",                             null: false
-    t.date     "invoice_date",                            null: false
-    t.date     "operation_date",                          null: false
-    t.decimal  "amount",         precision: 10, scale: 2, null: false
-    t.string   "reporter"
-    t.text     "notes"
-    t.string   "status",                                  null: false
-    t.string   "kind",                                    null: false
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
-    t.integer  "company_id"
-  end
-
-  add_index "operations", ["company_id"], name: "index_operations_on_company_id", using: :btree
-
   create_table "parsing_logs", force: :cascade do |t|
-    t.integer  "total_rows_parsed"
-    t.integer  "total_rows_suceeded"
-    t.integer  "total_rows_failed"
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.string   "operation_file_file_name"
-    t.string   "operation_file_content_type"
-    t.integer  "operation_file_file_size"
+    t.integer  "total_rows_parsed",           limit: 4
+    t.integer  "total_rows_suceeded",         limit: 4
+    t.integer  "total_rows_failed",           limit: 4
+    t.datetime "created_at",                                                  null: false
+    t.datetime "updated_at",                                                  null: false
+    t.string   "operation_file_file_name",    limit: 255
+    t.string   "operation_file_content_type", limit: 255
+    t.integer  "operation_file_file_size",    limit: 4
     t.datetime "operation_file_updated_at"
-    t.string   "status",                      default: "parsing"
-    t.integer  "total_keywords"
+    t.string   "status",                      limit: 255, default: "parsing"
+    t.integer  "total_keywords",              limit: 4
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
+    t.string   "email",                  limit: 255, default: "", null: false
+    t.string   "encrypted_password",     limit: 255, default: "", null: false
+    t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,  null: false
+    t.integer  "sign_in_count",          limit: 4,   default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.inet     "current_sign_in_ip"
-    t.inet     "last_sign_in_ip"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
