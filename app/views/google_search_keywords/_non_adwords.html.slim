@@ -1,0 +1,9 @@
+table.table.table-striped.table-bordered.table-hover
+  thead
+    tr
+      th Non-Adword Urls
+  - @google_result.non_adword_urls.each do |record|
+    tr
+      td
+        a href="#{record.url}" target="_blank" 
+          = truncate(record.url, length: 20, omission: '... ')

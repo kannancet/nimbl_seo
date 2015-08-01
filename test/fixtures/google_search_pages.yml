@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  google_keyword_id: 1
+  adword_count_top: 1
+  adword_count_right: 1
+  adword_count_total: 1
+  nonadword_count_total: 1
+  links_total: 1
+  search_results_total: 1
+  html_code: MyText
+
+two:
+  google_keyword_id: 1
+  adword_count_top: 1
+  adword_count_right: 1
+  adword_count_total: 1
+  nonadword_count_total: 1
+  links_total: 1
+  search_results_total: 1
+  html_code: MyText

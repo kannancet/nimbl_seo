@@ -1,0 +1,1 @@
+`rake seed:default_page`

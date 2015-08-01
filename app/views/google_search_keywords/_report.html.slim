@@ -1,0 +1,33 @@
+.row
+  .col-lg-12
+    .panel.panel-default
+      .panel-heading
+        | Import Data Report
+        - if @report.any?
+          a#delete_results.btn.btn-danger.btn-xs.pull-right href=delete_all_google_search_keywords_path  Delete All Keywords
+      br/
+      /! /.panel-heading
+      .panel-body
+        .dataTable_wrapper
+          table#dataTables-example.table.table-striped.table-bordered.table-hover
+            thead
+              tr
+                th Keyword
+                th Search Statistics
+                th Adword URLS
+                th Non Adword URLS
+            tbody
+              - @report.each do |keyword|
+                - if set_result(keyword)
+                  tr.odd.gradeX
+                    td= keyword.name
+                    td
+                      = render "results"
+                    td
+                      = render "adwords"
+                    td
+                      = render "non_adwords"
+        /! /.table-responsive
+      /! /.panel-body
+    /! /.panel
+  /! /.col-lg-12

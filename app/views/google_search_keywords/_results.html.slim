@@ -1,0 +1,19 @@
+table.table.table-striped.table-bordered.table-hover
+  thead
+    tr
+      th Adword Top
+      th Adword Right
+      th Adword total
+      th Non Adword total
+      th Links total
+      th Search Result total
+      th View
+  tr
+    td= @google_result.adword_count_top
+    td= @google_result.adword_count_right
+    td= @google_result.adword_count_total
+    td= @google_result.nonadword_count_total
+    td= @google_result.links_total
+    td= @google_result.search_results_total
+    td
+      a href="" target="_blank"  view page

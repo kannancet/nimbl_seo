@@ -1,0 +1,9 @@
+#page-wrapper
+  .row
+    .col-lg-12
+      h1.page-header
+        | Report #{image_tag "loader.gif", style: "display: none;" , id: "loader_icon"}
+  .row
+    .col-lg-12.col-md-12
+      #report_section.panel.panel-primary
+        = render "report"

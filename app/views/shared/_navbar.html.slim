@@ -1,0 +1,17 @@
+ul.nav.navbar-top-links.navbar-right
+  li
+    a data-target="#uploadModal" data-toggle="modal" href="#" 
+      i.fa.fa-upload.fa-fw
+      | Upload
+  li.dropdown
+    a.dropdown-toggle data-toggle="dropdown" href="#" 
+      i.fa.fa-user.fa-fw
+      = current_user.email if current_user
+      |  
+      i.fa.fa-caret-down
+    ul.dropdown-menu.dropdown-user
+      li.divider
+      li
+        = link_to "Sign out", destroy_user_session_path, :method => :delete
+    /! /.dropdown-user
+  /! /.dropdown
