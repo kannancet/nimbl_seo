@@ -7,6 +7,8 @@ module KeywordUpload
       create_parsing_log   
       add_upload_to_queue
       render text: "Upload Successful. Parsing in progress.."
+    else
+      render tect: "Failed to upload"
     end
   end
 

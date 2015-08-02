@@ -1,1 +1,1 @@
-worker:        env QUEUE=* BACKGROUND=yes bundle exec rake resque:work 
+worker:  bundle exec rake resque:work QUEUE=*

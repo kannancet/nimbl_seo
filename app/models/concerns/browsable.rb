@@ -3,9 +3,8 @@ module Browsable
   extend ActiveSupport::Concern
 
   #Function to browse page
-	def browse_page
-		url = GOOGLE_SEARCH_URL + name
-		response = fetch_url_via_proxy(url)
+	def browse_page(search)
+		response = fetch_via_mechanize(search)
 		request_successful(response) ? parse_page(response) : false
 	end
 
@@ -15,8 +14,12 @@ module Browsable
 	end
 
 	#function to fetch via proxy
-	def fetch_url_via_proxy(url)
-		Tor::HTTP.get(URI(url))
+	def fetch_via_mechanize(search)
+		agent = Mechanize.new
+		page = agent.get(GOOGLE_SEARCH_URL)
+		search_form = page.form_with(:name => "f")
+		search_form.field_with(:name => "q").value = search    
+		agent.submit(search_form)
 	end
 
 	#function to parse page in nokogiti
@@ -26,6 +29,7 @@ module Browsable
 
 	#Function to  create google search page
 	def create_google_search_page(page)
+		google_search_page.destroy if reload.google_search_page
 		GoogleSearchPage.find_or_create_by(google_keyword_id: id,
 																			 adword_count_top: adword_count_top(page),
 																			 adword_count_right: adword_count_right(page),
@@ -92,7 +96,7 @@ module Browsable
 
 	#Function to  search adword url right
 	def adwords_xpath_right(page)
-		page.xpath(PAGE_RIGHT_HAND_SIDE).select.each_with_index { |str, i| i.odd? }
+		page.xpath("//td[@id='rhs_block']").children.xpath("ol/li/div/cite")
 	end
 
 	#Function to  count adword top
@@ -109,17 +113,17 @@ module Browsable
 
 	#Xpath syntax set
 	def adwords_xpath_top(page)
-		page.xpath(PAGE_TOP_HAND_SIDE)
+		page.xpath("//div[@id='center_col']").children[1].xpath("ol/li/div/cite")
 	end
 
 	#Function to fet url top
 	def fetch_adword_url_top(adword)
-		adword.attributes['href'].value.split('&adurl=')[1]
+		"http://#{adword.text}"
 	end
 
 	#Function to fetch url right
 	def fetch_adword_url_right(adword)
-		adword.attributes['href'].value
+		adword.text
 	end
 
 	#Function to find adword total
@@ -141,12 +145,12 @@ module Browsable
 
 	#Function to xpath non adwords
 	def nonadwords_xpath(page)
-		page.xpath(PAGE_RESULT_SIDE).children.xpath(RESULT_BLOCK_ANCHOR_TAG)
+		page.xpath("//div[@id='ires']/ol//cite")
 	end
 
 	#Function to fet url for non adword
 	def fetch_nonadword_url(adword)
-		adword.attributes['href'].value
+		adword.text
 	end
 
 	#Function to find total links 
@@ -156,7 +160,7 @@ module Browsable
 
 	#Function to search resuls total
 	def search_results_total(page)
-		page.xpath(TOTAL_RESULT_TEXT_BLOCK).first.text.split("results")[0].split("About")[1].strip.split(",").join().to_s rescue 0
+		page.xpath("//div[@id='resultStats']").text.split(" ")[1].split(",").join
 	end
 
   #All class methods are defined here.
@@ -167,17 +171,25 @@ module Browsable
   		@keywords = GoogleKeyword.where(name: data)
 
   		@keywords.each do |keyword|
+  			execute(keyword)
+	  		sleep 2
+  		end
+  	end
+
+  	#Function to execute output
+  	def execute(keyword)
+			begin
   			page = browse_information(keyword)
   			save_information(keyword, page) if page
-  			sleep 1
+  			notify_pusher(keyword)
+  		rescue Exception => e
+  			logger.error e.message + "\n " + e.backtrace.join("\n ")
   		end
-
-  		notify_pusher
   	end
 
   	#Function to browse infos
   	def browse_information(keyword)
-  		page = keyword.browse_page
+  		page = keyword.browse_page(keyword.name)
   		keyword.create_google_search_page(page)
   		page
   	end
@@ -189,8 +201,8 @@ module Browsable
   	end
 
   	#Real time push to complete notify 
-  	def notify_pusher
-  		Pusher.trigger('upload', 'browsing', {info: 'successfully completed parsing'})
+  	def notify_pusher(keyword)
+  		Pusher.trigger('upload', 'browsing', {info: "successfully completed parsing keyword : #{keyword.name}"})
   	end
 
   end
